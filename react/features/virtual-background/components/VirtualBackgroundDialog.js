@@ -17,7 +17,7 @@ import { updateSettings } from '../../base/settings';
 import { Tooltip } from '../../base/tooltip';
 import { getLocalVideoTrack } from '../../base/tracks';
 import { showErrorNotification } from '../../notifications';
-import { toggleBackgroundEffect } from '../actions';
+import { toggleBackgroundEffect, changeBackground } from '../actions';
 import { VIRTUAL_BACKGROUND_TYPE } from '../constants';
 import { resizeImage, toDataURL } from '../functions';
 import logger from '../logger';
@@ -397,6 +397,7 @@ function VirtualBackground({
             }));
         }
         dispatch(hideDialog());
+        dispatch(changeBackground());
     }, [ dispatch, options, _localFlipX ]);
 
     // Prevent the selection of a new virtual background if it has not been applied by default
