@@ -172,7 +172,7 @@ class SpeakerStats extends Component<Props, State> {
     _updateStats() {
         const stats = this.props.conference.getSpeakerStats();
 
-        const expression = APP.store.getState()['features/facial-recognition'].facialExpressions[0];
+        const expression = APP.store.getState()['features/facial-recognition'].lastFacialExpression;
 
         this.setState({
             stats,
