@@ -12,6 +12,8 @@ import SpeakerStatsLabels from './SpeakerStatsLabels';
 
 declare var interfaceConfig: Object;
 
+declare var APP;
+
 /**
  * The type of the React {@code Component} props of {@link SpeakerStats}.
  */
@@ -41,7 +43,9 @@ type State = {
     /**
      * The stats summary provided by the JitsiConference.
      */
-    stats: Object
+    stats: Object,
+
+    lastFacialExpression: string,
 };
 
 /**
@@ -62,7 +66,8 @@ class SpeakerStats extends Component<Props, State> {
         super(props);
 
         this.state = {
-            stats: this.props.conference.getSpeakerStats()
+            stats: this.props.conference.getSpeakerStats(),
+            lastFacialExpression: ''
         };
 
         // Bind event handlers so they are only bound once per instance.
@@ -151,7 +156,8 @@ class SpeakerStats extends Component<Props, State> {
                 dominantSpeakerTime = { dominantSpeakerTime }
                 hasLeft = { hasLeft }
                 isDominantSpeaker = { isDominantSpeaker }
-                key = { userId } />
+                key = { userId }
+                lastFacialExpression = { this.state.lastFacialExpression } />
         );
     }
 
@@ -166,7 +172,12 @@ class SpeakerStats extends Component<Props, State> {
     _updateStats() {
         const stats = this.props.conference.getSpeakerStats();
 
-        this.setState({ stats });
+        const expression = APP.store.getState()['features/facial-recognition'].facialExpressions[0];
+
+        this.setState({
+            stats,
+            lastFacialExpression: expression
+        });
     }
 }
 
