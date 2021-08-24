@@ -22,6 +22,8 @@ type Props = {
      */
     _localDisplayName: string,
 
+    _localFacialExpression: string,
+
     /**
      * The JitsiConference from which stats will be pulled.
      */
@@ -131,6 +133,7 @@ class SpeakerStats extends Component<Props, State> {
         const hasLeft = statsModel.hasLeft();
 
         let displayName;
+        let facialExpression;
 
         if (statsModel.isLocalStats()) {
             const { t } = this.props;
@@ -139,16 +142,19 @@ class SpeakerStats extends Component<Props, State> {
             displayName = this.props._localDisplayName;
             displayName
                 = displayName ? `${displayName} (${meString})` : meString;
+            facialExpression = this.props._localFacialExpression;
         } else {
             displayName
                 = this.state.stats[userId].getDisplayName()
                     || interfaceConfig.DEFAULT_REMOTE_DISPLAY_NAME;
+            facialExpression = this.state.stats[userId].getLastExpression();
         }
 
         return (
             <SpeakerStatsItem
                 displayName = { displayName }
                 dominantSpeakerTime = { dominantSpeakerTime }
+                facialExpression = { facialExpression }
                 hasLeft = { hasLeft }
                 isDominantSpeaker = { isDominantSpeaker }
                 key = { userId } />
@@ -184,6 +190,8 @@ class SpeakerStats extends Component<Props, State> {
 function _mapStateToProps(state) {
     const localParticipant = getLocalParticipant(state);
 
+    const { lastFacialExpression } = state['features/facial-recognition'];
+
     return {
         /**
          * The local display name.
@@ -191,7 +199,8 @@ function _mapStateToProps(state) {
          * @private
          * @type {string|undefined}
          */
-        _localDisplayName: localParticipant && localParticipant.name
+        _localDisplayName: localParticipant && localParticipant.name,
+        _localFacialExpression: lastFacialExpression
     };
 }
 
