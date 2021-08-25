@@ -27,8 +27,6 @@ local function is_admin(jid)
     return um_is_admin(jid, module.host);
 end
 
-local facialExpressions = {};
-
 -- receives messages from client currently connected to the room
 -- clients indicates their own dominant speaker events
 function on_message(event)
@@ -102,7 +100,7 @@ function on_message(event)
             return false;
         end
 
-        facialExpressions[occupant.jid] = facialExpression.attr.expression;
+        room.speakerStats[occupant.jid].lastExpression = facialExpression.attr.expression;
     end
 
     return true
@@ -178,7 +176,7 @@ function occupant_joined(event)
             for jid, values in pairs(room.speakerStats) do
                 -- skip reporting those without a nick('dominantSpeakerId')
                 -- and skip focus if sneaked into the table
-                if values.nick ~= nil and values.nick ~= 'focus' then
+                if values.nick ~= nil and values.nick ~= 'focus' or values.lastExpression ~= nil then
                     local totalDominantSpeakerTime = values.totalDominantSpeakerTime;
                     if totalDominantSpeakerTime > 0 or room:get_occupant_jid(jid) == nil then
                         -- before sending we need to calculate current dominant speaker state
@@ -189,27 +187,26 @@ function occupant_joined(event)
 
                         users_json[values.nick] =  {
                             displayName = values.displayName,
-                            totalDominantSpeakerTime = totalDominantSpeakerTime
+                            totalDominantSpeakerTime = totalDominantSpeakerTime,
+                            lastExpression = values.lastExpression
                         };
                     end
                 end
             end
 
-            if next(users_json) == nil then
-                return;
+            if next(users_json) ~= nil then
+                local body_json = {};
+                body_json.type = 'speakerstats';
+                body_json.users = users_json;
+
+                local stanza = st.message({
+                    from = module.host;
+                    to = occupant.jid; })
+                :tag("json-message", {xmlns='http://jitsi.org/jitmeet'})
+                :text(json.encode(body_json)):up();
+
+                room:route_stanza(stanza);
             end
-
-            local body_json = {};
-            body_json.type = 'speakerstats';
-            body_json.users = users_json;
-
-            local stanza = st.message({
-                from = module.host;
-                to = occupant.jid; })
-            :tag("json-message", {xmlns='http://jitsi.org/jitmeet'})
-            :text(json.encode(body_json)):up();
-
-            room:route_stanza(stanza);
         end
 
         local context_user = event.origin and event.origin.jitsi_meet_context_user or nil;
