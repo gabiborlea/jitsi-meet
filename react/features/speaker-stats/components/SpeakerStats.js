@@ -6,6 +6,7 @@ import { Dialog } from '../../base/dialog';
 import { translate } from '../../base/i18n';
 import { getLocalParticipant } from '../../base/participants';
 import { connect } from '../../base/redux';
+import { getLastFacialExpression } from '../../facial-recognition/functions';
 
 import SpeakerStatsItem from './SpeakerStatsItem';
 import SpeakerStatsLabels from './SpeakerStatsLabels';
@@ -22,7 +23,7 @@ type Props = {
      */
     _localDisplayName: string,
 
-    _localFacialExpression: string,
+    _localFacialExpressions: Array<Object>,
 
     /**
      * The JitsiConference from which stats will be pulled.
@@ -142,12 +143,13 @@ class SpeakerStats extends Component<Props, State> {
             displayName = this.props._localDisplayName;
             displayName
                 = displayName ? `${displayName} (${meString})` : meString;
-            facialExpression = this.props._localFacialExpression;
+            facialExpression = getLastFacialExpression(this.props._localFacialExpressions);
         } else {
             displayName
                 = this.state.stats[userId].getDisplayName()
                     || interfaceConfig.DEFAULT_REMOTE_DISPLAY_NAME;
-            facialExpression = this.state.stats[userId].getLastExpression();
+            facialExpression = this.state.stats[userId].getLastFacialExpression();
+            facialExpression = facialExpression ? facialExpression : '';
         }
 
         return (
@@ -189,8 +191,7 @@ class SpeakerStats extends Component<Props, State> {
  */
 function _mapStateToProps(state) {
     const localParticipant = getLocalParticipant(state);
-
-    const { lastFacialExpression } = state['features/facial-recognition'];
+    const { facialExpressions: localFacialExpressions } = state['features/facial-recognition'];
 
     return {
         /**
@@ -200,7 +201,7 @@ function _mapStateToProps(state) {
          * @type {string|undefined}
          */
         _localDisplayName: localParticipant && localParticipant.name,
-        _localFacialExpression: lastFacialExpression
+        _localFacialExpressions: localFacialExpressions
     };
 }
 
