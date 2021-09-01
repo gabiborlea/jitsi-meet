@@ -6,7 +6,6 @@ import { Dialog } from '../../base/dialog';
 import { translate } from '../../base/i18n';
 import { getLocalParticipant } from '../../base/participants';
 import { connect } from '../../base/redux';
-import { getLastFacialExpression } from '../../facial-recognition/functions';
 
 import SpeakerStatsItem from './SpeakerStatsItem';
 import SpeakerStatsLabels from './SpeakerStatsLabels';
@@ -105,7 +104,8 @@ class SpeakerStats extends Component<Props, State> {
             <Dialog
                 cancelKey = { 'dialog.close' }
                 submitDisabled = { true }
-                titleKey = 'speakerStats.speakerStats'>
+                titleKey = 'speakerStats.speakerStats'
+                width = 'large'>
                 <div className = 'speaker-stats'>
                     <SpeakerStatsLabels />
                     { items }
@@ -134,7 +134,7 @@ class SpeakerStats extends Component<Props, State> {
         const hasLeft = statsModel.hasLeft();
 
         let displayName;
-        let facialExpression;
+        let facialExpressions;
 
         if (statsModel.isLocalStats()) {
             const { t } = this.props;
@@ -143,20 +143,21 @@ class SpeakerStats extends Component<Props, State> {
             displayName = this.props._localDisplayName;
             displayName
                 = displayName ? `${displayName} (${meString})` : meString;
-            facialExpression = getLastFacialExpression(this.props._localFacialExpressions);
+
+            facialExpressions = this.props._localFacialExpressions;
         } else {
             displayName
                 = this.state.stats[userId].getDisplayName()
                     || interfaceConfig.DEFAULT_REMOTE_DISPLAY_NAME;
-            facialExpression = this.state.stats[userId].getLastFacialExpression();
-            facialExpression = facialExpression ? facialExpression : '';
+
+            facialExpressions = this.state.stats[userId].getFacialExpressions();
         }
 
         return (
             <SpeakerStatsItem
                 displayName = { displayName }
                 dominantSpeakerTime = { dominantSpeakerTime }
-                facialExpression = { facialExpression }
+                facialExpressions = { facialExpressions }
                 hasLeft = { hasLeft }
                 isDominantSpeaker = { isDominantSpeaker }
                 key = { userId } />
