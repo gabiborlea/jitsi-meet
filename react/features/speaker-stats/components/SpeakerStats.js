@@ -6,6 +6,7 @@ import { Dialog } from '../../base/dialog';
 import { translate } from '../../base/i18n';
 import { getLocalParticipant } from '../../base/participants';
 import { connect } from '../../base/redux';
+import { getCameraTime } from '../../facial-recognition/functions';
 
 import SpeakerStatsItem from './SpeakerStatsItem';
 import SpeakerStatsLabels from './SpeakerStatsLabels';
@@ -23,6 +24,8 @@ type Props = {
     _localDisplayName: string,
 
     _localFacialExpressions: Array<Object>,
+
+    _localCameraTimeTracker: Object,
 
     /**
      * The JitsiConference from which stats will be pulled.
@@ -135,6 +138,7 @@ class SpeakerStats extends Component<Props, State> {
 
         let displayName;
         let facialExpressions;
+        let cameraTime;
 
         if (statsModel.isLocalStats()) {
             const { t } = this.props;
@@ -145,16 +149,20 @@ class SpeakerStats extends Component<Props, State> {
                 = displayName ? `${displayName} (${meString})` : meString;
 
             facialExpressions = this.props._localFacialExpressions;
+            cameraTime = getCameraTime(this.props._localCameraTimeTracker);
         } else {
             displayName
                 = this.state.stats[userId].getDisplayName()
                     || interfaceConfig.DEFAULT_REMOTE_DISPLAY_NAME;
 
             facialExpressions = this.state.stats[userId].getFacialExpressions();
+            // eslint-disable-next-line max-len
+            cameraTime = this.state.stats[userId].getCameraTimeTracker() && getCameraTime(this.state.stats[userId].getCameraTimeTracker());
         }
 
         return (
             <SpeakerStatsItem
+                cameraTime = { cameraTime }
                 displayName = { displayName }
                 dominantSpeakerTime = { dominantSpeakerTime }
                 facialExpressions = { facialExpressions }
@@ -193,6 +201,7 @@ class SpeakerStats extends Component<Props, State> {
 function _mapStateToProps(state) {
     const localParticipant = getLocalParticipant(state);
     const { facialExpressions: localFacialExpressions } = state['features/facial-recognition'];
+    const { cameraTimeTracker: localCameraTimeTracker } = state['features/facial-recognition'];
 
     return {
         /**
@@ -202,7 +211,8 @@ function _mapStateToProps(state) {
          * @type {string|undefined}
          */
         _localDisplayName: localParticipant && localParticipant.name,
-        _localFacialExpressions: localFacialExpressions
+        _localFacialExpressions: localFacialExpressions,
+        _localCameraTimeTracker: localCameraTimeTracker
     };
 }
 
