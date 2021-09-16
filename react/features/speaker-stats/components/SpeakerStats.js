@@ -27,6 +27,8 @@ type Props = {
 
     _localCameraTimeTracker: Object,
 
+    _reduceExpressions: boolean,
+
     /**
      * The JitsiConference from which stats will be pulled.
      */
@@ -110,7 +112,7 @@ class SpeakerStats extends Component<Props, State> {
                 titleKey = 'speakerStats.speakerStats'
                 width = 'large'>
                 <div className = 'speaker-stats'>
-                    <SpeakerStatsLabels />
+                    <SpeakerStatsLabels reduceExpressions = { this.props._reduceExpressions } />
                     { items }
                 </div>
             </Dialog>
@@ -168,7 +170,8 @@ class SpeakerStats extends Component<Props, State> {
                 facialExpressions = { facialExpressions }
                 hasLeft = { hasLeft }
                 isDominantSpeaker = { isDominantSpeaker }
-                key = { userId } />
+                key = { userId }
+                reduceExpressions = { this.props._reduceExpressions } />
         );
     }
 
@@ -202,6 +205,7 @@ function _mapStateToProps(state) {
     const localParticipant = getLocalParticipant(state);
     const { facialExpressions: localFacialExpressions } = state['features/facial-recognition'];
     const { cameraTimeTracker: localCameraTimeTracker } = state['features/facial-recognition'];
+    const { clientWidth } = state['features/base/responsive-ui'];
 
     return {
         /**
@@ -212,7 +216,8 @@ function _mapStateToProps(state) {
          */
         _localDisplayName: localParticipant && localParticipant.name,
         _localFacialExpressions: localFacialExpressions,
-        _localCameraTimeTracker: localCameraTimeTracker
+        _localCameraTimeTracker: localCameraTimeTracker,
+        _reduceExpressions: clientWidth < 750
     };
 }
 
