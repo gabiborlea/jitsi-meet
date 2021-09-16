@@ -101,42 +101,6 @@ function on_message(event)
         facialExpressions[facialExpression.attr.expression] = facialExpressions[facialExpression.attr.expression] + tonumber(facialExpression.attr.duration);
     end
 
-    local cameraTimeTrackerUpdate = event.stanza:get_child('cameraTimeTracker', 'http://jitsi.org/jitmeet');
-    if cameraTimeTrackerUpdate then
-        local roomAddress = cameraTimeTrackerUpdate.attr.room;
-        local room = get_room_from_jid(room_jid_match_rewrite(roomAddress));
-
-        if not room then
-            log("warn", "No room found %s", roomAddress);
-            return false;
-        end
-         if not room.speakerStats then
-            log("warn", "No speakerStats found for %s", roomAddress);
-            return false;
-        end
-        local from = event.stanza.attr.from;
-
-        local occupant = room:get_occupant_by_real_jid(from);
-        if not occupant then
-            log("warn", "No occupant %s found for %s", from, roomAddress);
-            return false;
-        end
-
-        local muted = true;
-        local lastCameraUpdate = tonumber(cameraTimeTrackerUpdate.attr.lastCameraUpdate);
-        local cameraTimeTracker = room.speakerStats[occupant.jid].cameraTimeTracker;
-        if cameraTimeTrackerUpdate.attr.muted == "false" then
-            muted = false;
-        end
-
-        if muted then
-                cameraTimeTracker.cameraTime = lastCameraUpdate - cameraTimeTracker.lastCameraUpdate;
-        end
-
-        cameraTimeTracker.muted = muted;
-        cameraTimeTracker.lastCameraUpdate = lastCameraUpdate;
-    end
-
     return true
 end
 
@@ -159,11 +123,6 @@ function new_SpeakerStats(nick, context_user)
             fearful = 0,
             disgusted = 0,
             sad = 0
-        };
-        cameraTimeTracker = {
-            muted = true,
-            cameraTime = 0,
-            lastCameraUpdate = 0
         };
     }, SpeakerStats);
 end
@@ -226,8 +185,7 @@ function occupant_joined(event)
                 if values.nick ~= nil and values.nick ~= 'focus' then
                     local totalDominantSpeakerTime = values.totalDominantSpeakerTime;
                     local facialExpressions = values.facialExpressions;
-                    local lastCameraUpdate = values.cameraTimeTracker.lastCameraUpdate;
-                    if totalDominantSpeakerTime > 0 or room:get_occupant_jid(jid) == nil or get_participant_expressions_count(facialExpressions) > 0 or lastCameraUpdate > 0 then
+                    if totalDominantSpeakerTime > 0 or room:get_occupant_jid(jid) == nil or get_participant_expressions_count(facialExpressions) > 0 then
                         -- before sending we need to calculate current dominant speaker state
                         if values:isDominantSpeaker() then
                             local timeElapsed = math.floor(socket.gettime()*1000 - values._dominantSpeakerStart);
@@ -237,8 +195,7 @@ function occupant_joined(event)
                         users_json[values.nick] =  {
                             displayName = values.displayName,
                             totalDominantSpeakerTime = totalDominantSpeakerTime,
-                            facialExpressions = facialExpressions,
-                            cameraTimeTracker = values.cameraTimeTracker
+                            facialExpressions = facialExpressions
                         };
                     end
                 end
