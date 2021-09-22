@@ -194,8 +194,6 @@ class SpeakerStats extends Component<Props, State> {
     _updateStats() {
         const stats = this.props.conference.getSpeakerStats();
 
-        console.log(stats);
-
         this.setState({ stats });
     }
 }
