@@ -35,9 +35,14 @@ import {
  * }}
  */
 export function addMessage(messageDetails: Object) {
+    const messageString = messageDetails.message;
+    const { message, textToSpeech } = JSON.parse(messageString);
+
     return {
         type: ADD_MESSAGE,
-        ...messageDetails
+        ...messageDetails,
+        message,
+        textToSpeech
     };
 }
 

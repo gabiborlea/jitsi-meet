@@ -134,6 +134,10 @@
             }
         }
     }
+    
+    input[type="checkbox"] + svg + span {
+        color: #a4b8d1;
+    }
 }
 
 #chat-input {

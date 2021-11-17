@@ -11,6 +11,8 @@ import { connect } from '../../../base/redux';
 import { areSmileysDisabled } from '../../functions';
 
 import SmileysPanel from './SmileysPanel';
+import TextToSpeechCheckbox from './TextToSpeechCheckbox';
+
 
 /**
  * The type of the React {@code Component} props of {@link ChatInput}.
@@ -173,6 +175,7 @@ class ChatInput extends Component<Props, State> {
                         </div>
                     </div>
                 </div>
+                <TextToSpeechCheckbox />
             </div>
         );
     }

@@ -76,6 +76,10 @@ MiddlewareRegistry.register(store => next => action => {
         if (typeof APP !== 'undefined') {
             APP.API.notifyChatUpdated(unreadCount, isOpen);
         }
+        console.log('PARTICIPANT', localParticipant);
+        if (action.messageType === 'remote' && action.textToSpeech && (new Date() - action.timestamp) < 1000) {
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance(`${action.displayName} says: ${action.message}`));
+        }
         break;
 
     case APP_WILL_MOUNT:
@@ -136,17 +140,21 @@ MiddlewareRegistry.register(store => next => action => {
             } else {
                 // Sending the message if privacy notice doesn't need to be shown.
 
-                const { privateMessageRecipient } = state['features/chat'];
+                const { privateMessageRecipient, sendTextToSpeechMessage } = state['features/chat'];
 
                 if (typeof APP !== 'undefined') {
                     APP.API.notifySendingChatMessage(action.message, Boolean(privateMessageRecipient));
                 }
+                const messageString = JSON.stringify({
+                    message: action.message,
+                    textToSpeech: sendTextToSpeechMessage
+                });
 
                 if (privateMessageRecipient) {
                     conference.sendPrivateTextMessage(privateMessageRecipient.id, action.message);
                     _persistSentPrivateMessage(store, privateMessageRecipient.id, action.message);
                 } else {
-                    conference.sendTextMessage(action.message);
+                    conference.sendTextMessage(messageString);
                 }
             }
         }

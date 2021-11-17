@@ -8,7 +8,8 @@ import {
     CLOSE_CHAT,
     OPEN_CHAT,
     SET_PRIVATE_MESSAGE_RECIPIENT,
-    SET_IS_POLL_TAB_FOCUSED
+    SET_IS_POLL_TAB_FOCUSED,
+    SET_SEND_TEXT_TO_SPEECH
 } from './actionTypes';
 
 const DEFAULT_STATE = {
@@ -18,7 +19,8 @@ const DEFAULT_STATE = {
     lastReadPoll: undefined,
     messages: [],
     nbUnreadMessages: 0,
-    privateMessageRecipient: undefined
+    privateMessageRecipient: undefined,
+    sendTextToSpeechMessage: false
 };
 
 ReducerRegistry.register('features/chat', (state = DEFAULT_STATE, action) => {
@@ -91,6 +93,13 @@ ReducerRegistry.register('features/chat', (state = DEFAULT_STATE, action) => {
             isPollsTabFocused: action.isPollsTabFocused,
             nbUnreadMessages: 0
         }; }
+
+    case SET_SEND_TEXT_TO_SPEECH:
+        return {
+            ...state,
+            sendTextToSpeechMessage: action.enabled
+        };
+
     }
 
     return state;

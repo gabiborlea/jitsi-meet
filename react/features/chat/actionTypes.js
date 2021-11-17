@@ -74,3 +74,13 @@ export const SET_PRIVATE_MESSAGE_RECIPIENT = 'SET_PRIVATE_MESSAGE_RECIPIENT';
  * }
  */
 export const SET_IS_POLL_TAB_FOCUSED = 'SET_IS_POLL_TAB_FOCUSED';
+
+/**
+ * Redux action type dispatched in order to set if message will be send as text to speech.
+ *
+ * {
+ *      type: SET_SEND_TEXT_TO_SPEECH,
+ *      enabled: boolean
+ * }
+ */
+export const SET_SEND_TEXT_TO_SPEECH = 'SET_SEND_TEXT_TO_SPEECH';

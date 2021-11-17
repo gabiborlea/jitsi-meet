@@ -5,7 +5,7 @@ import type { Dispatch } from 'redux';
 import VideoLayout from '../../../modules/UI/videolayout/VideoLayout';
 import { getParticipantById } from '../base/participants/functions';
 
-import { OPEN_CHAT } from './actionTypes';
+import { OPEN_CHAT, SET_SEND_TEXT_TO_SPEECH } from './actionTypes';
 import { closeChat } from './actions.any';
 
 export * from './actions.any';
@@ -66,5 +66,21 @@ export function toggleChat() {
 
         // Recompute the large video size whenever we toggle the chat, as it takes chat state into account.
         VideoLayout.onResize();
+    };
+}
+
+/**
+ * Sets if to send message as text to speech.
+ *
+ * @param  {boolean} enabled - The new state.
+ * @returns {{
+ *      type: SET_SEND_TEXT_TO_SPEECH,
+ *      enabled: boolean
+ * }}
+ */
+export function setSendTextToSpeech(enabled: boolean) {
+    return {
+        type: SET_SEND_TEXT_TO_SPEECH,
+        enabled
     };
 }
