@@ -142,7 +142,8 @@ export function submitSoundsTab(newState: Object): Function {
             || (newState.soundsParticipantJoined !== currentState.soundsParticipantJoined)
             || (newState.soundsParticipantLeft !== currentState.soundsParticipantLeft)
             || (newState.soundsTalkWhileMuted !== currentState.soundsTalkWhileMuted)
-            || (newState.soundsReactions !== currentState.soundsReactions);
+            || (newState.soundsReactions !== currentState.soundsReactions)
+            || (newState.soundsTextToSpeechMessages !== currentState.soundsTextToSpeechMessages);
 
         if (shouldUpdate) {
             dispatch(updateSettings({
@@ -150,7 +151,8 @@ export function submitSoundsTab(newState: Object): Function {
                 soundsParticipantJoined: newState.soundsParticipantJoined,
                 soundsParticipantLeft: newState.soundsParticipantLeft,
                 soundsTalkWhileMuted: newState.soundsTalkWhileMuted,
-                soundsReactions: newState.soundsReactions
+                soundsReactions: newState.soundsReactions,
+                soundsTextToSpeechMessages: newState.soundsTextToSpeechMessages
             }));
         }
     };

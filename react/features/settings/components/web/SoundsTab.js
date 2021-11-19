@@ -45,6 +45,8 @@ export type Props = {
     */
     soundsReactions: Boolean,
 
+    soundsTextToSpeechMessages: Boolean,
+
     /**
      * Invoked to obtain translated strings.
      */
@@ -96,6 +98,7 @@ class SoundsTab extends AbstractDialogTab<Props> {
             soundsParticipantLeft,
             soundsTalkWhileMuted,
             soundsReactions,
+            soundsTextToSpeechMessages,
             enableReactions,
             t
         } = this.props;
@@ -132,6 +135,11 @@ class SoundsTab extends AbstractDialogTab<Props> {
                     isChecked = { soundsTalkWhileMuted }
                     label = { t('settings.talkWhileMuted') }
                     name = 'soundsTalkWhileMuted'
+                    onChange = { this._onChange } />
+                <Checkbox
+                    isChecked = { soundsTextToSpeechMessages }
+                    label = { 'Text to speech messages' }
+                    name = 'soundsTextToSpeechMessages'
                     onChange = { this._onChange } />
             </div>
         );

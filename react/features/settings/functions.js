@@ -175,7 +175,8 @@ export function getSoundsTabProps(stateful: Object | Function) {
         soundsParticipantJoined,
         soundsParticipantLeft,
         soundsTalkWhileMuted,
-        soundsReactions
+        soundsReactions,
+        soundsTextToSpeechMessages
     } = state['features/base/settings'];
     const enableReactions = isReactionsEnabled(state);
 
@@ -185,6 +186,7 @@ export function getSoundsTabProps(stateful: Object | Function) {
         soundsParticipantLeft,
         soundsTalkWhileMuted,
         soundsReactions,
+        soundsTextToSpeechMessages,
         enableReactions
     };
 }

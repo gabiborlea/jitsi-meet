@@ -51,6 +51,7 @@ declare var interfaceConfig : Object;
  * message after we have received a private message in the last 20 seconds.
  */
 const PRIVACY_NOTICE_TIMEOUT = 20 * 1000;
+let joinTime;
 
 /**
  * Implements the middleware of the chat feature.
@@ -61,7 +62,7 @@ const PRIVACY_NOTICE_TIMEOUT = 20 * 1000;
 MiddlewareRegistry.register(store => next => action => {
     const { dispatch, getState } = store;
     const localParticipant = getLocalParticipant(getState());
-    let isOpen, unreadCount;
+    let isOpen, soundsTextToSpeechMessages, unreadCount;
 
     switch (action.type) {
     case ADD_MESSAGE:
@@ -76,8 +77,14 @@ MiddlewareRegistry.register(store => next => action => {
         if (typeof APP !== 'undefined') {
             APP.API.notifyChatUpdated(unreadCount, isOpen);
         }
-        console.log('PARTICIPANT', localParticipant);
-        if (action.messageType === 'remote' && action.textToSpeech && (new Date() - action.timestamp) < 1000) {
+
+        soundsTextToSpeechMessages = getState()['features/base/settings'].soundsTextToSpeechMessages;
+
+        if (window.speechSynthesis
+            && action.messageType === 'remote'
+            && action.textToSpeech
+            && joinTime <= action.timestamp
+            && soundsTextToSpeechMessages) {
             window.speechSynthesis.speak(new SpeechSynthesisUtterance(`${action.displayName} says: ${action.message}`));
         }
         break;
@@ -92,6 +99,7 @@ MiddlewareRegistry.register(store => next => action => {
         break;
 
     case CONFERENCE_JOINED:
+        joinTime = new Date();
         _addChatMsgListener(action.conference, store);
         break;
 
@@ -203,6 +211,11 @@ StateListenerRegistry.register(
         }
     }
 );
+/**
+ */
+async function speakAsync(name: string, message: string) {
+    window.speechSynthesis.speak(new SpeechSynthesisUtterance(`${name} says: ${message}`));
+}
 
 /**
  * Registers listener for {@link JitsiConferenceEvents.MESSAGE_RECEIVED} that
