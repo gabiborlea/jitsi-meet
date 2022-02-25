@@ -143,14 +143,11 @@ export function startFacialRecognition() {
         }
         const localVideoTrack = getLocalVideoTrack(state['features/base/tracks']);
 
-        if (localVideoTrack === undefined) {
+        if (!localVideoTrack) {
             return;
         }
         const stream = localVideoTrack.jitsiTrack.getOriginalStream();
 
-        if (stream === null) {
-            return;
-        }
         dispatch({ type: START_FACIAL_RECOGNITION });
         logger.log('Start face recognition');
         const firstVideoTrack = stream.getVideoTracks()[0];
@@ -191,11 +188,11 @@ export function stopFacialRecognition() {
 
         if (lastFacialExpression && lastFacialExpressionTimestamp) {
             dispatch(
-                        addFacialExpression(
-                            lastFacialExpression,
-                            duplicateConsecutiveExpressions + 1,
-                            lastFacialExpressionTimestamp
-                        )
+                addFacialExpression(
+                    lastFacialExpression,
+                    duplicateConsecutiveExpressions + 1,
+                    lastFacialExpressionTimestamp
+                )
             );
         }
         duplicateConsecutiveExpressions = 0;
@@ -215,7 +212,7 @@ export function stopFacialRecognition() {
  * @returns {void}
  */
 export function resetTrack() {
-    return function(dispatch: Function, getState: Function) {
+    return function(getState: Function) {
         const state = getState();
         const { jitsiTrack: localVideoTrack } = getLocalVideoTrack(state['features/base/tracks']);
         const stream = localVideoTrack.getOriginalStream();
