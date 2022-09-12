@@ -25,6 +25,7 @@ const defaultState = {
 };
 
 export interface IFaceLandmarksState {
+    currentFaceExpression?: string;
     faceBoxes: {
         left?: number;
         right?: number;
@@ -56,7 +57,8 @@ ReducerRegistry.register<IFaceLandmarksState>('features/face-landmarks',
                 ...state.faceExpressions,
                 [action.faceExpression]: state.faceExpressions[
                     action.faceExpression as keyof typeof state.faceExpressions] + action.duration
-            }
+            },
+            currentFaceExpression: action.currentFaceExpression
         };
     }
     case ADD_TO_FACE_EXPRESSIONS_BUFFER: {

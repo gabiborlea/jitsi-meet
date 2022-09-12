@@ -92,6 +92,10 @@ export function loadWorker() {
 
         workerUrl = window.URL.createObjectURL(workerBlob);
         worker = new Worker(workerUrl, { name: 'Face Recognition Worker' });
+        const state = getState();
+        const conference = getCurrentConference(state);
+        const localParticipant = getLocalParticipant(state);
+
         worker.onmessage = function(e: Object) {
             const { faceExpression, faceBox } = e.data;
 
@@ -103,19 +107,25 @@ export function loadWorker() {
                         dispatch(addFaceExpression(
                             lastFaceExpression,
                             duplicateConsecutiveExpressions + 1,
-                            lastFaceExpressionTimestamp
+                            lastFaceExpressionTimestamp,
+                            faceExpression
                         ));
                     }
                     lastFaceExpression = faceExpression;
                     lastFaceExpressionTimestamp = Date.now();
                     duplicateConsecutiveExpressions = 0;
+
+                    if (getParticipantCount(state) > 1) {
+                        conference.sendEndpointMessage('', {
+                            type: 'current-expression',
+                            faceExpression,
+                            timestamp: lastFaceExpressionTimestamp
+                        });
+                    }
                 }
             }
 
             if (faceBox) {
-                const state = getState();
-                const conference = getCurrentConference(state);
-                const localParticipant = getLocalParticipant(state);
 
                 if (getParticipantCount(state) > 1) {
                     sendFaceBoxToParticipants(conference, faceBox);
@@ -248,7 +258,7 @@ export function stopFaceLandmarksDetection() {
  * @param  {number} timestamp - Duration in seconds of the face expression.
  * @returns {Object}
  */
-function addFaceExpression(faceExpression: string, duration: number, timestamp: number) {
+function addFaceExpression(faceExpression: string, duration: number, timestamp: number, currentFaceExpression) {
     return function(dispatch: Function, getState: Function) {
         const finalDuration = duration * getDetectionInterval(getState()) / 1000;
 
@@ -256,7 +266,8 @@ function addFaceExpression(faceExpression: string, duration: number, timestamp: 
             type: ADD_FACE_EXPRESSION,
             faceExpression,
             duration: finalDuration,
-            timestamp
+            timestamp,
+            currentFaceExpression
         });
     };
 }

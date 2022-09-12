@@ -103,7 +103,7 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
         const conference = getCurrentConference(state);
 
         if (getParticipantCount(state) > 1) {
-            sendFaceExpressionToParticipants(conference, action.faceExpression, action.duration);
+            sendFaceExpressionToParticipants(conference, action.faceExpression, action.duration, action.timestamp);
         }
         sendFaceExpressionToServer(conference, action.faceExpression, action.duration);
         dispatch(addToFaceExpressionsBuffer({

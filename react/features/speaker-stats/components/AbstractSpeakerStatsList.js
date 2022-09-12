@@ -26,7 +26,9 @@ const abstractSpeakerStatsList = (speakerStatsItem: Function, itemStyles?: Objec
     const { defaultRemoteDisplayName } = useSelector(
         state => state['features/base/config']) || {};
     const { faceLandmarks } = useSelector(state => state['features/base/config']) || {};
-    const { faceExpressions } = useSelector(state => state['features/face-landmarks']) || {};
+    const { faceExpressions,
+        currentFaceExpression,
+        faceExpressionsBuffer } = useSelector(state => state['features/face-landmarks']) || {};
     const reloadInterval = useRef(null);
 
     /**
@@ -50,6 +52,11 @@ const abstractSpeakerStatsList = (speakerStatsItem: Function, itemStyles?: Objec
                     );
                     if (faceLandmarks?.enableDisplayFaceExpressions) {
                         stats[userId].setFaceExpressions(faceExpressions);
+                        currentFaceExpression && stats[userId].setCurrentFaceExpression(currentFaceExpression);
+                        stats[userId].timeline = faceExpressionsBuffer.map(e => {
+                            return { x: e.timestamp,
+                                y: e.emotion };
+                        });
                     }
                 }
 
@@ -93,6 +100,7 @@ const abstractSpeakerStatsList = (speakerStatsItem: Function, itemStyles?: Objec
         if (showFaceExpressions) {
             props.faceExpressions = statsModel.getFaceExpressions();
         }
+        props.currentFaceExpression = statsModel.getCurrentFaceExpression();
         props.hidden = statsModel.hidden;
         props.showFaceExpressions = showFaceExpressions;
         props.displayName = statsModel.getDisplayName() || defaultRemoteDisplayName;

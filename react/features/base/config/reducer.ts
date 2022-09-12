@@ -29,6 +29,14 @@ declare let interfaceConfig: any;
  * @type {Object}
  */
 const INITIAL_NON_RN_STATE: IConfig = {
+    faceLandmarks: {
+        enableFaceCentering: true,
+        enableFaceExpressionsDetection: true,
+        enableDisplayFaceExpressions: true,
+        enableRTCStats: true,
+        faceCenteringThreshold: 20,
+        captureInterval: 500
+    }
 };
 
 /**

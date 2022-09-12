@@ -19,6 +19,8 @@ import FaceExpressionsSwitch from './FaceExpressionsSwitch';
 import SpeakerStatsLabels from './SpeakerStatsLabels';
 import SpeakerStatsList from './SpeakerStatsList';
 import SpeakerStatsSearch from './SpeakerStatsSearch';
+// @ts-ignore
+import Timeline from './Timeline';
 
 const useStyles = makeStyles((theme: any) => {
     return {
@@ -150,6 +152,7 @@ const SpeakerStats = () => {
                 )}
                 <SpeakerStatsList />
             </div>
+            <Timeline />
         </Dialog>
 
     );

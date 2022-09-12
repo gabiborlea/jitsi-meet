@@ -24,13 +24,15 @@ if (typeof OffscreenCanvas === 'undefined') {
 export function sendFaceExpressionToParticipants(
         conference: Object,
         faceExpression: string,
-        duration: number
+        duration: number,
+        timestamp
 ): void {
     try {
         conference.sendEndpointMessage('', {
             type: 'face_landmark',
             faceExpression,
-            duration
+            duration,
+            timestamp
         });
     } catch (err) {
         logger.warn('Could not broadcast the face expression to the other participants', err);

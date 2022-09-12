@@ -20,7 +20,7 @@ const INITIAL_STATE = {
     isOpen: false,
     pendingReorder: true,
     criteria: null,
-    showFaceExpressions: false
+    showFaceExpressions: true
 };
 
 export interface ISpeakerStatsState {

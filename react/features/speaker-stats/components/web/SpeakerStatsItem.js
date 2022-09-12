@@ -60,6 +60,8 @@ type Props = {
      */
     styles: Object,
 
+    currentFaceExpression: string,
+
     /**
      * Invoked to obtain translated strings.
      */
@@ -114,7 +116,9 @@ const SpeakerStatsItem = (props: Props) => {
                 <div
                     aria-label = { props.t('speakerStats.speakerStats') }
                     className = { props.styles.displayName }>
-                    { props.displayName }
+                    { props.currentFaceExpression
+                        ? `${props.displayName} (${props.currentFaceExpression})`
+                        : props.displayName }
                 </div>
                 <div
                     aria-label = { props.t('speakerStats.speakerTime') }
