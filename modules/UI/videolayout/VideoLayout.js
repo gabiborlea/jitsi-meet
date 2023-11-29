@@ -12,6 +12,9 @@ import {
     getTrackByMediaTypeAndParticipant,
     getVideoTrackByParticipant
 } from '../../../react/features/base/tracks/functions.any';
+import {
+    setParticipantInPictureInPicture
+} from '../../../react/features/picture-in-picture/actions';
 
 import LargeVideoManager from './LargeVideoManager';
 import { VIDEO_CONTAINER_TYPE } from './VideoContainer';
@@ -191,6 +194,8 @@ const VideoLayout = {
             ).catch(() => {
                 // do nothing
             });
+
+            APP.store.dispatch(setParticipantInPictureInPicture(videoStream, id));
         }
     },
 

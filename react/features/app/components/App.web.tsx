@@ -19,6 +19,7 @@ import '../reducers';
  * @augments AbstractApp
  */
 export class App extends AbstractApp {
+    _pipWindow: any = null;
 
     /**
      * Creates an extra {@link ReactElement}s to be added (unconditionally)

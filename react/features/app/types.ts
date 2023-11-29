@@ -59,6 +59,7 @@ import { INoiseSuppressionState } from '../noise-suppression/reducer';
 import { INotificationsState } from '../notifications/reducer';
 import { IOverlayState } from '../overlay/reducer';
 import { IParticipantsPaneState } from '../participants-pane/reducer';
+import { IPictureInPictureState } from '../picture-in-picture/reducer';
 import { IPollsState } from '../polls/reducer';
 import { IPowerMonitorState } from '../power-monitor/reducer';
 import { IPrejoinState } from '../prejoin/reducer';
@@ -148,6 +149,7 @@ export interface IReduxState {
     'features/notifications': INotificationsState;
     'features/overlay': IOverlayState;
     'features/participants-pane': IParticipantsPaneState;
+    'features/picture-in-picture': IPictureInPictureState;
     'features/polls': IPollsState;
     'features/power-monitor': IPowerMonitorState;
     'features/prejoin': IPrejoinState;

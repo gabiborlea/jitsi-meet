@@ -1,3 +1,4 @@
+import { EventHandler } from "react";
 import { IStore } from "./react/features/app/types";
 import { IConfig } from "./react/features/base/config/configType";
 
@@ -13,6 +14,17 @@ declare global {
     };
     const interfaceConfig: any;
 
+    interface DocumentPictureInPictureOptions {
+        width: number;
+        height: number;
+    };
+
+    interface DocumentPictureInPicture extends EventTarget {
+        requestWindow: (options?: DocumentPictureInPictureOptions) => Promise<Window>;
+        window: Window;
+        onEnter: EventHandler;
+    };
+
     interface Window {
         config: IConfig;
         JITSI_MEET_LITE_SDK?: boolean;
@@ -24,6 +36,7 @@ declare global {
         // selenium tests handler
         _sharedVideoPlayer: any;
         alwaysOnTop: { api: any };
+        documentPictureInPicture: DocumentPictureInPicture
     }
 
     interface Document {

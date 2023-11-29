@@ -8,6 +8,7 @@ import '../keyboard-shortcuts/reducer';
 import '../no-audio-signal/reducer';
 import '../noise-detection/reducer';
 import '../participants-pane/reducer';
+import '../picture-in-picture/reducer';
 import '../power-monitor/reducer';
 import '../prejoin/reducer';
 import '../remote-control/reducer';
