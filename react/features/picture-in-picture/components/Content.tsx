@@ -9,7 +9,7 @@ const Content = () => {
         (state: IReduxState) => state['features/picture-in-picture']
     );
     const { localFlipX } = useSelector((state: IReduxState) => state['features/base/settings']);
-    const mirrorTrack = track?.isLocal() && localFlipX;
+    const mirrorTrack = track?.isLocal() && track.videoType !== 'desktop' && localFlipX;
 
     const styles = {
         video: {
@@ -19,7 +19,8 @@ const Content = () => {
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            transform: mirrorTrack ? 'scaleX(-1)' : 'none'
+            transform: mirrorTrack ? 'scaleX(-1)' : 'none',
+            visibility: isTrackMuted ? 'hidden' : 'visible'
         },
         avatar: {
             position: 'absolute',

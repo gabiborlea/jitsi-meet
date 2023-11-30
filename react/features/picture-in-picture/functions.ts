@@ -1,8 +1,19 @@
 import { IStateful } from '../base/app/types';
 import { toState } from '../base/redux/functions';
 
-import { mountApp, unmountApp }from './components/App';
+import { mountApp, unmountApp } from './components/App';
 import logger from './logger';
+
+/**
+ *
+ */
+export function isPictureInPictureEnabled() {
+    if ('documentPictureInPicture' in window) {
+        return true;
+    }
+
+    return false;
+}
 
 /**
  *
@@ -10,9 +21,13 @@ import logger from './logger';
 export async function createPictureInPicture() {
     let pipWindow: Window | null = null;
 
+    if (!isPictureInPictureEnabled()) {
+        return;
+    }
+
     try {
-        pipWindow = await window.documentPictureInPicture.requestWindow({ width: 500,
-            height: 300 });
+        pipWindow = await window.documentPictureInPicture?.requestWindow({ width: 500,
+            height: 300 }) ?? null;
     } catch (err) {
         logger.warn(`Could not create Picture in Picture ${err}`);
 
@@ -25,26 +40,26 @@ export async function createPictureInPicture() {
         pipWindow.document.body.setAttribute('style', 'margin:0; padding:0;');
         pipWindow.document.body.append(root);
         mountApp(root);
+
+        Array.from(document.styleSheets).forEach(styleSheet => {
+            try {
+                const cssRules = Array.from(styleSheet.cssRules)
+                                    .map(rule => rule.cssText)
+                                    .join('');
+                const style = document.createElement('style');
+
+                style.textContent = cssRules;
+                pipWindow?.document.head.appendChild(style);
+            } catch (e) {
+                const link = document.createElement('link');
+
+                link.rel = 'stylesheet';
+                link.type = styleSheet.type;
+                link.href = styleSheet.href ?? '';
+                pipWindow?.document.head.appendChild(link);
+            }
+        });
     }
-
-    Array.from(document.styleSheets).forEach(styleSheet => {
-        try {
-            const cssRules = Array.from(styleSheet.cssRules)
-                                .map(rule => rule.cssText)
-                                .join('');
-            const style = document.createElement('style');
-
-            style.textContent = cssRules;
-            pipWindow?.document.head.appendChild(style);
-        } catch (e) {
-            const link = document.createElement('link');
-
-            link.rel = 'stylesheet';
-            link.type = styleSheet.type;
-            link.href = styleSheet.href ?? '';
-            pipWindow?.document.head.appendChild(link);
-        }
-    });
 
     return {
         pipWindow,

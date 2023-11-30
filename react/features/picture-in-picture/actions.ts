@@ -60,7 +60,7 @@ export function setTrackOnVideo(track: any, isMuted?: boolean) {
             track?.attach(video);
         }
 
-        let isTrackMuted = track?.isMuted();
+        let isTrackMuted = track?.isMuted() ?? true;
 
         if (typeof isMuted !== 'undefined') {
             isTrackMuted = isMuted;

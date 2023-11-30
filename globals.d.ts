@@ -36,7 +36,7 @@ declare global {
         // selenium tests handler
         _sharedVideoPlayer: any;
         alwaysOnTop: { api: any };
-        documentPictureInPicture: DocumentPictureInPicture
+        documentPictureInPicture?: DocumentPictureInPicture
     }
 
     interface Document {

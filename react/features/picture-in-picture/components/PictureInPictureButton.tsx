@@ -5,6 +5,7 @@ import { translate } from '../../base/i18n/functions';
 import { IconPictureInPicture } from '../../base/icons/svg';
 import AbstractButton, { IProps as AbstractButtonProps } from '../../base/toolbox/components/AbstractButton';
 import { togglePictureInPicture } from '../actions';
+import { isPictureInPictureEnabled } from '../functions';
 
 interface IProps extends AbstractButtonProps {
 
@@ -27,7 +28,7 @@ class PictureInPictureButton extends AbstractButton<IProps> {
     tooltip = 'toolbar.pictureInPicture';
 
     /**
-     * Handles clicking / pressing the button, and opens / closes the whiteboard view.
+     * Handles clicking / pressing the button, and opens / closes the picture in picture view.
      *
      * @private
      * @returns {void}
@@ -60,7 +61,7 @@ class PictureInPictureButton extends AbstractButton<IProps> {
 function _mapStateToProps(state: IReduxState) {
     return {
         _toggled: state['features/picture-in-picture'].isOpen ?? false,
-        visible: true
+        visible: isPictureInPictureEnabled()
     };
 }
 
