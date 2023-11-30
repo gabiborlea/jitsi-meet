@@ -1,7 +1,7 @@
 import { IStateful } from '../base/app/types';
 import { toState } from '../base/redux/functions';
 
-import renderApp from './components/App';
+import { mountApp, unmountApp }from './components/App';
 import logger from './logger';
 
 /**
@@ -24,7 +24,7 @@ export async function createPictureInPicture() {
         root.id = 'root';
         pipWindow.document.body.setAttribute('style', 'margin:0; padding:0;');
         pipWindow.document.body.append(root);
-        renderApp(root);
+        mountApp(root);
     }
 
     Array.from(document.styleSheets).forEach(styleSheet => {
@@ -66,6 +66,7 @@ export function getPictureInPictureVideo(stateful: IStateful) {
  *
  */
 export function disposePictureInPicture(pipWindow: Window) {
+    const root = pipWindow.document.getElementById('root');
 
-
+    root && unmountApp(root);
 }

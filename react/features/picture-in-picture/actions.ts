@@ -77,26 +77,6 @@ export function setTrackOnVideo(track: any, isMuted?: boolean) {
  *
  * @returns
  */
-export function setAvatar() {
-    return (_dispatch: IStore['dispatch'], getState: IStore['getState']) => {
-        const state = getState();
-        const {
-            participantId: prevParticipantId
-        } = state['features/picture-in-picture'];
-
-        // if (track !== prevTrack) {
-        //     const video = getPictureInPictureVideo(state);
-
-        //     prevTrack.detach(video);
-        //     t prack.attach(video);
-        // }
-    };
-}
-
-/**
- *
- * @returns
- */
 export function closePictureInPicture() {
     return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
         const { pipWindow, track } = getState()['features/picture-in-picture'];

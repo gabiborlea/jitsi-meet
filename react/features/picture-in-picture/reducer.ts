@@ -33,6 +33,11 @@ ReducerRegistry.register('features/picture-in-picture',
                 isOpen,
                 pipWindow
             };
+        case SET_PARTICIPANT_IN_PIP:
+            return {
+                ...state,
+                participantId
+            };
         case SET_PARTICIPANT_TRACK:
             return {
                 ...state,

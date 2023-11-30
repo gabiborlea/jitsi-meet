@@ -20,12 +20,12 @@ const App = () => (
             id = 'picture-in-picture-window'
             style = { style }>
             <Content />
-            <Toolbox toolbarButtons = { [ 'camera', 'microphone', 'hangup' ] } />
+            <Toolbox toolbarButtons = { [ 'camera', 'microphone', 'picture-in-picture', 'hangup' ] } />
         </div>
     </JitsiThemeProvider>
 );
 
-const renderApp = (element: HTMLElement) => {
+export const mountApp = (element: HTMLElement) => {
     ReactDOM.render(
 
         // @ts-ignore
@@ -34,4 +34,6 @@ const renderApp = (element: HTMLElement) => {
         </Provider>, element);
 };
 
-export default renderApp;
+export const unmountApp = (element: HTMLElement) => {
+    ReactDOM.unmountComponentAtNode(element);
+};

@@ -59,7 +59,7 @@ class PictureInPictureButton extends AbstractButton<IProps> {
  */
 function _mapStateToProps(state: IReduxState) {
     return {
-        _toggled: state['features/picture-in-picture'].isOpen,
+        _toggled: state['features/picture-in-picture'].isOpen ?? false,
         visible: true
     };
 }
