@@ -1,28 +1,30 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 
-const style: any = {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover'
-};
+import { IReduxState } from '../../app/types';
 
 const Content = () => {
-    const showVideo = true;
+    const { isTrackMuted } = useSelector((state: IReduxState) => state['features/picture-in-picture']);
+    const style: any = useMemo(() => {
+        console.log("SCHIMB");
+        return {
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            display: isTrackMuted ? 'none' : 'block'
+        };
+    }, [ isTrackMuted ]);
 
-    if (showVideo) {
-        return (
+    return (
+        <>
             <video
                 autoPlay = { true }
                 id = 'largeVd'
                 muted = { true }
                 playsInline = { true }
                 style = { style } />
-        );
-    }
-
-    return (<div>
-        <h1>Ceva</h1>
-    </div>);
+        </>
+    );
 };
 
 export default Content;

@@ -8,6 +8,7 @@ import { getLogger } from './features/base/logging/functions';
 import Platform from './features/base/react/Platform.web';
 import { getJitsiMeetGlobalNS } from './features/base/util/helpers';
 import DialInSummaryApp from './features/invite/components/dial-in-summary/web/DialInSummaryApp';
+import { openPictureInPicture } from './features/picture-in-picture/actions';
 import PrejoinApp from './features/prejoin/components/web/PrejoinApp';
 
 const logger = getLogger('index.web');
@@ -58,3 +59,13 @@ globalNS.renderEntryPoint = ({
         document.getElementById(elementId)
     );
 };
+
+try {
+    // Request video to automatically enter picture-in-picture when eligible.
+    navigator.mediaSession.setActionHandler('enterpictureinpicture', () => {
+        APP.store.dispatch(openPictureInPicture());
+    });
+
+} catch (error) {
+    console.error('The enterpictureinpicture action is not yet supported.');
+}

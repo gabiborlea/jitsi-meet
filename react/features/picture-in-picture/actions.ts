@@ -11,10 +11,9 @@ export function openPictureInPicture() {
     return async (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
         const { track, participantId } = getState()['features/picture-in-picture'];
 
-        const pipWindow = await createPictureInPicture();
-        const video = getPictureInPictureVideo(getState());
+        const { pipWindow, video } = await createPictureInPicture();
 
-        track?.attach(video);
+        video && track?.attach(video);
 
         pipWindow?.addEventListener('pagehide', () => {
             dispatch(closePictureInPicture());
@@ -34,11 +33,12 @@ export function openPictureInPicture() {
  * @param participantId
  * @returns
  */
-export function setParticipantInPictureInPicture(track: any, participantId: string) {
+export function setParticipantInPictureInPicture(track: any, participantId: string, isTrackMuted?: boolean) {
     return {
         type: SET_PARTICIPANT_IN_PIP,
         track,
-        participantId
+        participantId,
+        isTrackMuted
     };
 }
 
@@ -46,7 +46,7 @@ export function setParticipantInPictureInPicture(track: any, participantId: stri
  *
  * @returns
  */
-export function setTrackOnVideo(track: any) {
+export function setTrackOnVideo(track: any, isMuted?: boolean) {
     return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
         const state = getState();
         const {
@@ -55,13 +55,20 @@ export function setTrackOnVideo(track: any) {
         } = state['features/picture-in-picture'];
         const video = getPictureInPictureVideo(state);
 
-        if (isOpen && track !== prevTrack) {
+        if (isOpen && track !== prevTrack && video) {
             prevTrack?.detach(video);
             track?.attach(video);
         }
+
+        let isTrackMuted = track?.isMuted();
+
+        if (typeof isMuted !== 'undefined') {
+            isTrackMuted = isMuted;
+        }
         dispatch({
             type: SET_PARTICIPANT_TRACK,
-            track
+            track,
+            isTrackMuted
         });
     };
 }
@@ -81,7 +88,7 @@ export function setAvatar() {
         //     const video = getPictureInPictureVideo(state);
 
         //     prevTrack.detach(video);
-        //     track.attach(video);
+        //     t prack.attach(video);
         // }
     };
 }
@@ -92,7 +99,10 @@ export function setAvatar() {
  */
 export function closePictureInPicture() {
     return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
-        const { pipWindow } = getState()['features/picture-in-picture'];
+        const { pipWindow, track } = getState()['features/picture-in-picture'];
+        const video = getPictureInPictureVideo(getState());
+
+        video && track?.detach(video);
 
         pipWindow && disposePictureInPicture(pipWindow);
         pipWindow?.close();

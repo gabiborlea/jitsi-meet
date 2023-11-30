@@ -8,24 +8,48 @@ import logger from './logger';
  *
  */
 export async function createPictureInPicture() {
-    let pip = null;
+    let pipWindow: Window | null = null;
 
     try {
-        pip = await window.documentPictureInPicture.requestWindow({ width: 300,
+        pipWindow = await window.documentPictureInPicture.requestWindow({ width: 500,
             height: 300 });
     } catch (err) {
         logger.warn(`Could not create Picture in Picture ${err}`);
 
-        return pip;
     }
-    const root = pip.document.createElement('div');
 
-    root.id = 'root';
-    pip.document.body.setAttribute('style', 'margin:0; padding:0;');
-    pip.document.body.append(root);
-    renderApp(root);
+    if (pipWindow) {
+        const root = pipWindow.document.createElement('div');
 
-    return pip;
+        root.id = 'root';
+        pipWindow.document.body.setAttribute('style', 'margin:0; padding:0;');
+        pipWindow.document.body.append(root);
+        renderApp(root);
+    }
+
+    Array.from(document.styleSheets).forEach(styleSheet => {
+        try {
+            const cssRules = Array.from(styleSheet.cssRules)
+                                .map(rule => rule.cssText)
+                                .join('');
+            const style = document.createElement('style');
+
+            style.textContent = cssRules;
+            pipWindow?.document.head.appendChild(style);
+        } catch (e) {
+            const link = document.createElement('link');
+
+            link.rel = 'stylesheet';
+            link.type = styleSheet.type;
+            link.href = styleSheet.href ?? '';
+            pipWindow?.document.head.appendChild(link);
+        }
+    });
+
+    return {
+        pipWindow,
+        video: pipWindow?.document.getElementById('largeVd')
+    };
 }
 
 /**
@@ -42,8 +66,6 @@ export function getPictureInPictureVideo(stateful: IStateful) {
  *
  */
 export function disposePictureInPicture(pipWindow: Window) {
-    // const largeVideoWrapper = document.getElementById('largeVideoWrapper');
-    // const largeVideo = pipWindow.document.getElementById('largeVideo');
 
-    // largeVideo && largeVideoWrapper?.append(largeVideo);
+
 }

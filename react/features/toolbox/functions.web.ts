@@ -12,6 +12,7 @@ import InviteButton from '../invite/components/add-people-dialog/web/InviteButto
 import KeyboardShortcutsButton from '../keyboard-shortcuts/components/web/KeyboardShortcutsButton';
 import NoiseSuppressionButton from '../noise-suppression/components/NoiseSuppressionButton';
 import ParticipantsPaneButton from '../participants-pane/components/web/ParticipantsPaneButton';
+import PictureInPictureButton from '../picture-in-picture/components/PictureInPictureButton';
 import RaiseHandContainerButton from '../reactions/components/web/RaiseHandContainerButtons';
 import ReactionsMenuButton from '../reactions/components/web/ReactionsMenuButton';
 import LiveStreamButton from '../recording/components/LiveStream/web/LiveStreamButton';
@@ -268,6 +269,12 @@ export function getAllToolboxButtons(_customToolbarButtons?: {
         group: 2
     };
 
+    const pictureInPicture = {
+        key: 'picture-in-picture',
+        Content: PictureInPictureButton,
+        group: 2
+    };
+
     const toggleCamera = {
         key: 'toggle-camera',
         Content: ToggleCameraButton,
@@ -421,6 +428,7 @@ export function getAllToolboxButtons(_customToolbarButtons?: {
         participants,
         invite,
         tileview,
+        pictureInPicture,
         toggleCamera,
         videoQuality,
         fullscreen,

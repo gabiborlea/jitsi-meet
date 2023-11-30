@@ -2,8 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
+import GlobalStyles from '../../base/ui/components/GlobalStyles.web';
+import JitsiThemeProvider from '../../base/ui/components/JitsiThemeProvider.web';
+import Toolbox from '../../toolbox/components/web/Toolbox';
+
 import Content from './Content';
-import ToolBox from './Toolbox';
 
 const style: any = {
     width: '100%',
@@ -11,11 +14,15 @@ const style: any = {
 };
 
 const App = () => (
-    <div
-        style = { style }>
-        <Content />
-        <ToolBox />
-    </div>
+    <JitsiThemeProvider>
+        <GlobalStyles />
+        <div
+            id = 'picture-in-picture-window'
+            style = { style }>
+            <Content />
+            <Toolbox toolbarButtons = { [ 'camera', 'microphone', 'hangup' ] } />
+        </div>
+    </JitsiThemeProvider>
 );
 
 const renderApp = (element: HTMLElement) => {

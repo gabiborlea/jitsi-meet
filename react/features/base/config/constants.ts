@@ -36,6 +36,7 @@ export const TOOLBAR_BUTTONS: ToolbarButton[] = [
     'mute-everyone',
     'mute-video-everyone',
     'participants-pane',
+    'picture-in-picture',
     'profile',
     'raisehand',
     'recording',
@@ -56,7 +57,7 @@ export const TOOLBAR_BUTTONS: ToolbarButton[] = [
 /**
  * The toolbar buttons to show on premeeting screens.
  */
-export const PREMEETING_BUTTONS = [ 'microphone', 'camera', 'select-background', 'invite', 'settings' ];
+export const PREMEETING_BUTTONS = [ 'microphone', 'camera', 'select-background', 'settings', 'picture-in-picture' ];
 
 /**
   * The toolbar buttons to show on 3rdParty prejoin screen.

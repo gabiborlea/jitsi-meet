@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 
 import { IReduxState } from '../../../../app/types';
+import { setParticipantInPictureInPicture } from '../../../../picture-in-picture/actions';
 import Avatar from '../../../avatar/components/Avatar';
 import Video from '../../../media/components/web/Video';
 import { getLocalParticipant } from '../../../participants/functions';
@@ -46,8 +47,12 @@ function Preview(props: IProps) {
     const { _participantId, flipVideo, name, videoMuted, videoTrack } = props;
     const className = flipVideo ? 'flipVideoX' : '';
 
+    const dispatch = useDispatch();
+
     useEffect(() => {
         APP.API.notifyPrejoinVideoVisibilityChanged(Boolean(!videoMuted && videoTrack));
+
+        dispatch(setParticipantInPictureInPicture(videoTrack, _participantId, videoMuted));
     }, [ videoMuted, videoTrack ]);
 
     useEffect(() => {

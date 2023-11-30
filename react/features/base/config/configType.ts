@@ -19,6 +19,7 @@ export type ToolbarButton = 'camera' |
     'mute-video-everyone' |
     'noisesuppression' |
     'participants-pane' |
+    'picture-in-picture' |
     'profile' |
     'raisehand' |
     'reactions' |

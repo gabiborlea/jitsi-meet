@@ -3,9 +3,10 @@ import ReducerRegistry from '../base/redux/ReducerRegistry';
 import { SET_PARTICIPANT_IN_PIP, SET_PARTICIPANT_TRACK, SET_PIP } from './actionTypes';
 
 export interface IPictureInPictureState {
-    isOpen: boolean;
+    isOpen?: boolean;
+    isTrackMuted?: boolean;
     participantId?: string;
-    pipWindow: Window | null;
+    pipWindow?: Window | null;
     track?: any;
 }
 
@@ -23,7 +24,7 @@ export interface IPictureInPictureAction extends IPictureInPictureState {
 
 ReducerRegistry.register('features/picture-in-picture',
     (state: IPictureInPictureState = DEFAULT_STATE, action: IPictureInPictureAction) => {
-        const { type, isOpen, pipWindow, track, participantId } = action;
+        const { type, isOpen, pipWindow, track, isTrackMuted, participantId } = action;
 
         switch (type) {
         case SET_PIP:
@@ -35,7 +36,8 @@ ReducerRegistry.register('features/picture-in-picture',
         case SET_PARTICIPANT_TRACK:
             return {
                 ...state,
-                track
+                track,
+                isTrackMuted
             };
         default:
             return state;
