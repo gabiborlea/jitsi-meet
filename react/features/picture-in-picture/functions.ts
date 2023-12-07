@@ -5,7 +5,9 @@ import { mountApp, unmountApp } from './components/App';
 import logger from './logger';
 
 /**
+ * Indicates whether picture in picture in enabled.
  *
+ * @returns {boolean}
  */
 export function isPictureInPictureEnabled() {
     if ('documentPictureInPicture' in window) {
@@ -16,13 +18,18 @@ export function isPictureInPictureEnabled() {
 }
 
 /**
+ *  Creates a new document picture in picture.
  *
+ * @returns {Object} - Returns the new video with the video.
  */
 export async function createPictureInPicture() {
     let pipWindow: Window | null = null;
 
     if (!isPictureInPictureEnabled()) {
-        return;
+        return {
+            pipWindow: null,
+            video: null
+        };
     }
 
     try {
@@ -68,7 +75,10 @@ export async function createPictureInPicture() {
 }
 
 /**
+ * Returns the video element in the picture and picture window.
  *
+ * @param {IStateful} stateful - A redux stateful object.
+ * @returns {HTMLVideoElement}
  */
 export function getPictureInPictureVideo(stateful: IStateful) {
     const state = toState(stateful);
@@ -78,7 +88,10 @@ export function getPictureInPictureVideo(stateful: IStateful) {
 }
 
 /**
+ * Disposes the react components from the window.
  *
+ * @param {Window} pipWindow - The picture in picture Window.
+ * @returns {void}
  */
 export function disposePictureInPicture(pipWindow: Window) {
     const root = pipWindow.document.getElementById('root');

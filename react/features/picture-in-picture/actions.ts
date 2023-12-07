@@ -1,15 +1,24 @@
 import { IStore } from '../app/types';
 
 import { SET_PARTICIPANT_IN_PIP, SET_PARTICIPANT_TRACK, SET_PIP } from './actionTypes';
-import { createPictureInPicture, disposePictureInPicture, getPictureInPictureVideo } from './functions';
+import {
+    createPictureInPicture,
+    disposePictureInPicture,
+    getPictureInPictureVideo,
+    isPictureInPictureEnabled
+} from './functions';
 
 /**
+ * Action that opens a new picture in picture.
  *
- * @returns
+ * @returns {Function}
  */
 export function openPictureInPicture() {
     return async (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
-        const { track, participantId } = getState()['features/picture-in-picture'];
+        if (!isPictureInPictureEnabled()) {
+            return;
+        }
+        const { track } = getState()['features/picture-in-picture'];
 
         const { pipWindow, video } = await createPictureInPicture();
 
@@ -28,10 +37,12 @@ export function openPictureInPicture() {
 }
 
 /**
+ * Action that sets the participant's details: the participantId and its video track.
  *
- * @param track
- * @param participantId
- * @returns
+ * @param {any} track - Participant's video track: camera or desktop.
+ * @param {string} participantId - Participant's id.
+ * @param {boolean | undefined} isTrackMuted - Wether the participant's track is muted or not.
+ * @returns {Object}
  */
 export function setParticipantInPictureInPicture(track: any, participantId: string, isTrackMuted?: boolean) {
     return {
@@ -43,8 +54,11 @@ export function setParticipantInPictureInPicture(track: any, participantId: stri
 }
 
 /**
+ * Action that attaches the video track to the video in picture in picture.
  *
- * @returns
+ * @param {any} track - Participant's video track: camera or desktop.
+* @param {boolean | undefined} isMuted - Wether the participant's track is muted or not.
+ * @returns {Function}
  */
 export function setTrackOnVideo(track: any, isMuted?: boolean) {
     return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
@@ -74,8 +88,9 @@ export function setTrackOnVideo(track: any, isMuted?: boolean) {
 }
 
 /**
+ * Action that closes a new picture in picture and handles its disposal.
  *
- * @returns
+ * @returns {Function}
  */
 export function closePictureInPicture() {
     return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
@@ -96,8 +111,9 @@ export function closePictureInPicture() {
 }
 
 /**
+ * Action that toggles the picture in picture window.
  *
- * @returns
+ * @returns {Function}
  */
 export function togglePictureInPicture() {
     return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
